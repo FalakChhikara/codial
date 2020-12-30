@@ -7,7 +7,7 @@ router.get('/profile',user_controllers.profilepage);
 router.get('/signin',user_controllers.signIn);
 router.get('/signup',user_controllers.signUp);
 router.post('/create',user_controllers.create);
-// router.get('/create',user_controllers.create);
+router.post('/createSession',user_controllers.createSession);
 
 
 
