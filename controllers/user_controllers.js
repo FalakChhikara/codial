@@ -28,11 +28,14 @@ module.exports.profilepage = function(req,res){
         }
     })
     .exec(function(err,post){
-        return res.render('profile',{
-            title : "profile",
-            // user : user
-            post : post,
+        User.find({},function(err,users){
+            return res.render('profile',{
+                title : "profile",
+                users : users,
+                post : post,
+            });
         });
+        
     })
 
 
@@ -57,6 +60,26 @@ module.exports.profilepage = function(req,res){
     // return res.render('profile',{
     //     title : "profile",
     // });
+}
+
+module.exports.Friendprofilepage = function(req,res){
+    User.findById(req.params.id, function(err,user){
+       return res.render('userinfo',{
+           title: "user-info",
+           profile : user,
+       });
+    });
+}
+
+module.exports.profileUpdate = function(req,res){
+    if(req.user.id == req.params.id){
+        User.findByIdAndUpdate(req.params.id,req.body,function(err,user){
+            return res.redirect('back');
+        });
+    }
+    else{
+        return res.status(401).send("Unauth access");
+    }
 }
 
 module.exports.create = function(req,res){
@@ -115,7 +138,7 @@ module.exports.createSession = function(req,res){
     return res.redirect('/users/profile');
 }
 
-module.exports.dsetroySession = function(req,res){
+module.exports.destroySession = function(req,res){
     req.logout();
     return res.redirect('/');
 }

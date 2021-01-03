@@ -28,3 +28,25 @@ module.exports.createComment = function(req,res){
 
     
 }
+
+module.exports.deleteComment = function(req,res){
+    console.log('************ falak **************');
+    Comment.findById(req.params.id,function(err,comment){
+        
+        // .id converting objectid to string
+        if(comment.user == req.user.id){
+            let postid = comment.post;
+            comment.remove();
+            Post.findByIdAndUpdate(postid,
+                {$pull: {comment:req.params.id}},
+                function(err,post){
+                return res.redirect('back');
+            });
+
+        }
+        else{
+            return res.redirect('back');
+        }
+    });
+    
+}

@@ -1,0 +1,27 @@
+<section>
+    <h4>posts</h4>
+    <% if(locals.user){ %>
+    <form action="/posts/create/" method="POST">
+        <textarea name="content" cols="30" rows="3" placeholder="type here..." required></textarea>
+        <input type="submit" value="Post">
+    </form>
+    <% } %>
+
+
+
+</section>
+
+<ul>
+    <% for(post of post){ %>
+        <li><p><%= post.content %><br> 
+        <small>
+            <%=post.user.name %><br>
+            <% if(locals.user && locals.user.id == post.user.id){ %>
+            <a href="/posts/delete/<%= post._id %>">delete post</a>
+            <% } %>
+        </small></p> </li>
+        
+        <%- include('./_comment'); -%>
+
+    <% } %>
+</ul>
