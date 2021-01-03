@@ -3,10 +3,9 @@ const passport = require('passport');
 const User = require('../models/user');
 const Post = require('../models/post');;
 const Comment = require('../models/comment');
-const { populate } = require('../models/comment');
 
-module.exports.profilepage = function(req,res){
-    console.log(req.cookies.codial);
+module.exports.profilepage = async function(req,res){
+    // console.log(req.cookies.codial);
     // auth check in routers and user is stored in locals
     // console.log("*******", res.locals.user);
     // Post.find({},function(err,post){
@@ -19,24 +18,50 @@ module.exports.profilepage = function(req,res){
 
 
     // prepopulate user with post.user
-    Post.find({})
-    .populate('user')
-    .populate({
-        path: 'comment',
-        populate:{
-            path: 'user'
-        }
-    })
-    .exec(function(err,post){
-        User.find({},function(err,users){
-            return res.render('profile',{
-                title : "profile",
-                users : users,
-                post : post,
-            });
-        });
+    // Post.find({})
+    // .populate('user')
+    // .populate({
+    //     path: 'comment',
+    //     populate:{
+    //         path: 'user'
+    //     }
+    // })
+    // .exec(function(err,post){
+    //     User.find({},function(err,users){
+    //         return res.render('profile',{
+    //             title : "profile",
+    //             users : users,
+    //             post : post,
+    //         });
+    //     });
         
-    })
+    // })
+
+    // using async await
+    try
+    {
+        let post = await Post.find({})
+        .populate('user')
+        .populate({
+            path: 'comment',
+            populate:{
+                path: 'user'
+            }
+        });
+
+        let users = await User.find({});
+        
+        return res.render('profile',{
+            title : "profile",
+            users : users,
+            post : post,
+        });
+    }
+    catch(err){
+        console.log(err);
+        return;
+    }
+    
 
 
     // if(req.cookies.user_id){
@@ -61,6 +86,9 @@ module.exports.profilepage = function(req,res){
     //     title : "profile",
     // });
 }
+
+
+
 
 module.exports.Friendprofilepage = function(req,res){
     User.findById(req.params.id, function(err,user){
@@ -133,13 +161,21 @@ module.exports.create = function(req,res){
 
 // using passport
 module.exports.createSession = function(req,res){
-    console.log(req.cookies);
-    console.log("falak");
+    // console.log(req.cookies);
+    // console.log("falak");
+    req.flash('success','Logged in successfully');  ///////////////////////////////////doubt
+    // res.locals.flash = {
+    //     'success' : 'Signup page',
+    // }
+    console.log(req);
+    console.log("************",req.falak);
     return res.redirect('/users/profile');
 }
 
 module.exports.destroySession = function(req,res){
     req.logout();
+    req.flash('success','Logout in successfully');
+    
     return res.redirect('/');
 }
 
@@ -147,6 +183,9 @@ module.exports.signUp = function(req,res){
     if(req.isAuthenticated())
     {
         return res.redirect('/users/profile');
+    }
+    res.locals.flash = {
+        'success' : 'Signup page',
     }
     return res.render('user_signup',{
         title : "Codial : Signup",
@@ -157,6 +196,9 @@ module.exports.signIn = function(req,res){
     if(req.isAuthenticated())
     {
         return res.redirect('/users/profile');
+    }
+    res.locals.flash = {
+        'success' : 'Signin page',
     }
     return res.render('user_signin',{
         title : "Codial : signIn",
