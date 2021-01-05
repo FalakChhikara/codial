@@ -1,7 +1,7 @@
 const { response } = require('express');
 const passport = require('passport');
 const User = require('../models/user');
-const Post = require('../models/post');;
+const Post = require('../models/post');
 const Comment = require('../models/comment');
 
 module.exports.profilepage = async function(req,res){
@@ -41,6 +41,7 @@ module.exports.profilepage = async function(req,res){
     try
     {
         let post = await Post.find({})
+        .sort('-createdAt')
         .populate('user')
         .populate({
             path: 'comment',
@@ -167,8 +168,7 @@ module.exports.createSession = function(req,res){
     // res.locals.flash = {
     //     'success' : 'Signup page',
     // }
-    console.log(req);
-    console.log("************",req.falak);
+    req.falak = "falak";
     return res.redirect('/users/profile');
 }
 

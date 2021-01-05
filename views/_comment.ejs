@@ -1,18 +1,24 @@
+<div class="Cform">
 <% if(locals.user){ %>
-    <form action="/comment/create/" method="POST">
+    <form class="CommentForm" id="commentForm-<%= post._id %>" action="/comment/create/" method="POST">
         <textarea name="content" cols="30" rows="3" placeholder="type here..." required></textarea>
-        <input type="hidden" name="post" value="<%= post._id %>">
+        <input type="hidden"  name="post" value="<%= post._id %>">
         <input type="submit" value="Add comment">
     </form>
 <% } %>
+</div>
 
+<ul class="commentlist" id="commentlist-<%= post._id %>">
 <% for(comment of post.comment){ %>
+    <div id="comment-<%= comment._id %>">
     <li><p><%= comment.content %> 
         <small>
             
             <%=comment.user.name %>
             <% if(locals.user && locals.user.id == comment.user.id){ %>
-                <a href="/comment/delete/<%= comment._id %>">delete comment</a>
+                <a class="deleteComment" href="/comment/delete/<%= comment._id %>">delete comment</a>
             <% } %>
         </small></p> </li>
+    </div>
 <% } %>
+</ul>

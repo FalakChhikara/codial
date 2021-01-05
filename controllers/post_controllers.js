@@ -17,11 +17,31 @@ module.exports.createPost = async function(req,res){
     //     return res.redirect('back');
     // });
     try{
-        // let post = 
-        await Post.create({
+        let post = await Post.create({
             content : req.body.content,
             user : req.user._id    ////////////////////////// doubt
         });
+        
+        // if ajax request
+        if(req.xhr){
+            let popPost = await Post.findById(post.id)
+            .populate('user')
+            .populate({
+                path: 'comment',
+                populate:{
+                    path: 'user'
+                }
+            });
+            console.log("after data");
+            return res.status(200).json({
+                data: {
+                    post: popPost,
+                    user: req.user,
+                },
+                message: "post created",
+            });
+        }
+
         req.flash("success", "post-created");
         return res.redirect('back');
     }catch(err){
@@ -54,11 +74,23 @@ module.exports.deletePost = async function(req,res){
     //     }
     // });
     try{
+        
         let post = await Post.findById(req.params.id);
+        console.log(req.params.id);
         if(post.user == req.user.id){
             post.remove();
             await Comment.deleteMany({post:req.params.id});
+            if(req.xhr){
+                return res.status(200).json({
+                    data: {
+                        post_id : req.params.id,
+                    },
+                    message: "post deleted",
+                });
+            }
+
             req.flash("success", "post-deleted");
+
             return res.redirect('back');
         }
         else{

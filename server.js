@@ -19,13 +19,13 @@ const saasMiddleware = require('node-sass-middleware');
 const flash = require('connect-flash');
 const flashMiddleware = require('./config/flashMiddleware');
 
-app.use(saasMiddleware({
-    src: './assets/scss',
-    dest: './assets/css',
-    debug: true,
-    outputStyle: 'extended',
-    prefix:  '/css' 
-}));
+// app.use(saasMiddleware({
+//     src: './assets/scss',
+//     dest: './assets/css',
+//     debug: true,
+//     outputStyle: 'extended',
+//     prefix:  '/css' 
+// }));
 
 app.use(express.urlencoded());
 app.use(cookieParser());
@@ -51,7 +51,7 @@ app.use(session({
     saveUninitialized: false,
     resave: false,
     cookie: {
-        maxAge: 1000*60*10
+        maxAge: 1000*60*100
     },
     store: new MongoStore({
             mongooseConnection: db,
@@ -64,13 +64,19 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(passport.setAuthUser);
+
+
+
 app.use(flash()); // send in session-cookie and erased after refresh
 
 // app.use(function(req,res,next){
-//     // console.log(req);
-//     console.log(req.url);
-//     console.log(req.flash('success'));
-//     console.log(res.locals.flash);
+//     console.log(req.session);
+//     // console.log(req.url);
+//     // console.log(req.falak);
+//     // console.log(req.flash('success'));
+//     // console.log(req.flash('success'));
+//     // console.log(res.locals.flash);
+//     // console.log("***********************");
 //     next();
 
 // });
@@ -80,9 +86,11 @@ app.use(flashMiddleware.setFlash);
 // use express router
 
 // app.use(function(req,res,next){
-//     console.log(req.url);
-//     console.log(req.flash('success'));
-//     console.log(res.locals.flash);
+//     // console.log(req.session);
+//     // console.log(req.falak);
+//     // console.log(req.flash('success'));
+//     // console.log(res.locals.flash);
+//     // console.log("***********************");
 //     next();
 
 // });
