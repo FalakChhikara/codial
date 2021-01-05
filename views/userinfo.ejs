@@ -3,9 +3,10 @@ Userinfo<br>
 <%= locals.profile.email %>
 
 <% if(locals.user.id == profile.id){ %>
-    <form action="/users/update/<%= profile.id %>" method="POST">
+    <form action="/users/update/<%= profile.id %>" method="POST" enctype="multipart/form-data">
         <input type="text" name="name" value="<%= profile.name %>" placeholder="your name" required>
         <input type="text" name="email" value="<%= profile.email %>" placeholder="your email" required>
+        <input type="file" name="avatar" placeholder="profilePicture">
         <input type="submit" value="Update">
     </form>
 <% } %>

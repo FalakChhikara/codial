@@ -35,6 +35,9 @@ app.use(expressLayouts);
 
 
 app.use(express.static('./assets'));
+app.use('/uploads', express.static(__dirname + '/uploads'));
+
+
 // for style and link tags
 app.set('layout extractStyles', true);
 app.set('layout extractScripts', true);

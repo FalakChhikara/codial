@@ -3,6 +3,8 @@ const passport = require('passport');
 const User = require('../models/user');
 const Post = require('../models/post');
 const Comment = require('../models/comment');
+const fs = require('fs');
+const path = require('path');
 
 module.exports.profilepage = async function(req,res){
     // console.log(req.cookies.codial);
@@ -100,14 +102,40 @@ module.exports.Friendprofilepage = function(req,res){
     });
 }
 
-module.exports.profileUpdate = function(req,res){
-    if(req.user.id == req.params.id){
-        User.findByIdAndUpdate(req.params.id,req.body,function(err,user){
-            return res.redirect('back');
-        });
-    }
-    else{
-        return res.status(401).send("Unauth access");
+module.exports.profileUpdate = async function(req,res){
+    try{
+        if(req.user.id == req.params.id){
+            // let user = await User.findByIdAndUpdate(req.params.id,req.body);
+            let user = await User.findById(req.params.id);
+            User.uploadAvatar(req,res,function(err){
+                if(err){
+                    console.log("*********(Multer error)*******");
+                    return;
+                }else{
+                    user.name = req.body.name;
+                    user.email = req.body.email;
+                    if(req.file){
+                        if(user.avatar){
+                            fs.unlinkSync(path.join(__dirname,'..',user.avatar));
+                        }
+                        user.avatar = User.avatarPath + '/' + req.file.filename;
+                    }
+                    console.log(req.file);
+                    console.log(user.avatar);
+                }
+                user.save();
+                return res.redirect('back');
+            });
+            
+            
+            
+        }
+        else{
+            return res.status(401).send("Unauth access");
+        }
+    }catch{
+        console.log(err);
+        return;
     }
 }
 

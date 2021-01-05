@@ -13,7 +13,14 @@
         <%= locals.user.name %><br>
         <%= locals.user.email %>
         <%- include('./_post'); -%>
+        <img src=<%= user.avatar %> width="100px">
         
+        <!-- <video width="320" height="240" controls>
+            <source src=<%= user.avatar %> type="video/mp4">
+            <source src=<%= user.avatar %> type="video/ogg">
+            Your browser does not support the video tag.
+          </video> -->
+
         <div>
             <h4>Friend</h4>
             <% for(u of users){ %>
