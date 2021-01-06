@@ -21,19 +21,24 @@
             Your browser does not support the video tag.
           </video> -->
 
-        <div>
+        <div id="allPeople">
             <h4>Friend</h4>
             <% for(u of users){ %>
-                <small>
-                    <a href="/users/profile/<%= u.id %>"><%=u.name %></a><br>
-                    
-                </small><br>
+                <% if (locals.user.id != u.id){ %>
+                    <small>
+                        <a href="/users/profile/<%= u._id %>"><%=u.name %></a>
+                     
+                            <a class="toggle_friend" href="/friends/addRemoveFriend/?status=Remove&id=<%= u._id %>" friendStatus = "Added"> Add Friend </a>
+                        
+                    </small><br>
+                <% } %>
             <% } %>
         </div>
 
         <script src='/js/post.js'></script>
         <script src='/js/comment.js'></script>
         <script src='/js/like.js'></script>
+        <script src='/js/friend.js'></script>
 
         <!-- partials -->
         <!-- <%- include('./_footer'); -%>
@@ -41,3 +46,9 @@
     </body>
 
 </html> -->
+
+<!-- <% if (u._id in locals.user.friendList){ %> -->
+    <!-- <a class="toggle_friend" href="/friends/addRemoveFriend/?status=Add&id=<%= u._id %>" friendStatus = "notAdded"> Add Friend </a> -->
+    <!-- <% } else { %> -->
+        <!-- <a class="toggle_friend" href="/friends/addRemoveFriend/?status=Remove&id=<%= u._id %>" friendStatus = "Added"> Remove Friend </a> -->
+    <!-- <% } %> -->

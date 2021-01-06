@@ -84,7 +84,7 @@ module.exports.deletePost = async function(req,res){
             await Like.deleteMany({likeable:post._id, onModel:'Post'});
             let popComment = await Comment.find({post: post._id});
             for(c of popComment){
-                console.log("***********",c);
+                // console.log("***********",c);
                 await Like.deleteMany({_id: {$in: c.likes}});
             }
 
