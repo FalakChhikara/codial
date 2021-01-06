@@ -1,7 +1,7 @@
 <div class="Cform">
 <% if(locals.user){ %>
     <form class="CommentForm" id="commentForm-<%= post._id %>" action="/comment/create/" method="POST">
-        <textarea name="content" cols="30" rows="3" placeholder="type here..." required></textarea>
+        <textarea name="content" cols="20" rows="2" placeholder="type here..." required></textarea>
         <input type="hidden"  name="post" value="<%= post._id %>">
         <input type="submit" value="Add comment">
     </form>
@@ -16,7 +16,12 @@
             
             <%=comment.user.name %>
             <% if(locals.user && locals.user.id == comment.user.id){ %>
-                <a class="deleteComment" href="/comment/delete/<%= comment._id %>">delete comment</a>
+                <a class="deleteComment" href="/comment/delete/<%= comment._id %>"> delete comment</a>
+            <% } %>
+            <% if(locals.user){ %>
+                <a class="Likes" href="/likes/?tag=Comment&id=<%= comment._id %>" data-likes="<%= comment.likes.length %>"><%=comment.likes.length %> Like</a>
+            <% } else { %>
+                <%=comment.likes.length %> Like
             <% } %>
         </small></p> </li>
     </div>

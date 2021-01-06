@@ -43,15 +43,16 @@ let newpost = function(post, user){
             
             <div id="post-${post._id}">
             <li>
-            <p>${post.content}<br> 
+            <p><h2>${post.content}</h2><br> 
             <small>
                 ${post.user.name}<br>
                 <a class="deletePostAnchor" href="/posts/delete/${post._id}">delete post</a>
+                <a class="Likes" href="/likes/?tag=Post&id=${post._id} " data-likes="${post.likes.length}">${post.likes.length} Like</a>
             </small></p> 
             </li>
             <div class="Cform">
             <form class="CommentForm" id="commentForm-${post._id}" action="/comment/create/" method="POST">
-            <textarea name="content" cols="30" rows="3" placeholder="type here..." required></textarea>
+            <textarea name="content" cols="20" rows="2" placeholder="type here..." required></textarea>
             <input type="hidden" name="post" value="${post._id}">
             <input type="submit" value="Add comment">
             </form>
@@ -95,8 +96,35 @@ function deletePost(event){
     });
 }
 
+function postLikes(event){
+    event.preventDefault();
+    let pathurl = $(this).attr("href");
+    $.ajax({
+        type: 'POST',
+        url: pathurl,
+        success: function(data){
+            // console.log(data);
+            $(`#post-${data.data.post_id}`).remove();
+            new Noty({
+                theme: 'relax',
+                text: "Post deleted!",
+                type: 'success',
+                layout: 'topRight',
+                timeout: 1500
+                
+            }).show();
+            
+        },
+        error: function(error){
+            // console.log(error.responseText);
+            console.log("error");
+        }
+    });
+}
+
 // $("#postlist").on("click", "a", deletePost);
 $("#postlist").on("click", ".deletePostAnchor", deletePost);
+
 
 
 

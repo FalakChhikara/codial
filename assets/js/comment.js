@@ -10,7 +10,7 @@ let newcomment = function(comment){
                     
                     ${comment.user.name}
                         <a class="deleteComment" href="/comment/delete/${comment._id}">delete comment</a>
-
+                        <a class="Likes" href="/likes/?tag=Comment&id=${comment._id} " data-likes="${comment.likes.length}">${comment.likes.length} Like</a>
                 </small></p> </li>
             </div>
             `

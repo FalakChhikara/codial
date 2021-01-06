@@ -105,3 +105,32 @@ module.exports.deletePost = async function(req,res){
 
     
 }
+
+module.exports.likePost = async function(){
+    try{
+        let post = await Post.findById(req.body.post);
+        if(post)
+        {
+            let like = await Like.create({
+                post : req.body.post,
+                user : req.user._id    ////////////////////////// doubt
+            });
+            post.comment.push(comment._id);
+            post.save(); // as we update
+            if(req.xhr){
+                let popComment = await Comment.findById(comment.id).populate('user');
+                console.log(popComment);
+                return res.status(200).json({
+                    data: {
+                        comment: popComment,
+                    },
+                    message: "comment created",
+                });
+            }
+            return res.redirect('back');
+        }
+    }catch(err){
+        req.flash("error", "error in comment creation");
+        return res.redirect('back');
+    }
+}
