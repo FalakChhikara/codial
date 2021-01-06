@@ -21,18 +21,40 @@
             Your browser does not support the video tag.
           </video> -->
 
-        <div id="allPeople">
-            <h4>Friend</h4>
-            <% for(u of users){ %>
+          <h2>Friend</h2>
+        <div id="Friendusers">
+            <ul id="FriendusersList">    
+            <% for(u of Friendusers){ %>
                 <% if (locals.user.id != u.id){ %>
+                    <div id="usersProfile-<%= u._id %>">
                     <small>
-                        <a href="/users/profile/<%= u._id %>"><%=u.name %></a>
-                     
-                            <a class="toggle_friend" href="/friends/addRemoveFriend/?status=Remove&id=<%= u._id %>" friendStatus = "Added"> Add Friend </a>
-                        
+                        <li>
+                        <a  href="/users/profile/<%= u._id %>"><%=u.name %></a>
+                        <a class="toggle_friend" href="/friends/addRemoveFriend/?status=Add&id=<%= u._id %>"> Remove Friend </a>
+                        </li>
                     </small><br>
+                    </div>
                 <% } %>
             <% } %>
+            </ul>
+        </div>
+
+        <h2>People You May Know</h2>
+        <div id="Generalusers">
+         <ul id="GeneralusersList">   
+            <% for(u of Generalusers){ %>
+                <% if (locals.user.id != u.id){ %>
+                    <div id="usersProfile-<%= u._id %>">
+                    <small>
+                        <li>
+                        <a href="/users/profile/<%= u._id %>"><%=u.name %></a>
+                        <a class="toggle_friend" href="/friends/addRemoveFriend/?status=Remove&id=<%= u._id %>"> Add Friend </a>
+                        </li>
+                    </small><br>
+                    </div>
+                <% } %>
+            <% } %>
+         </ul>
         </div>
 
         <script src='/js/post.js'></script>

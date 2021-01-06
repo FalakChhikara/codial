@@ -51,13 +51,15 @@ module.exports.profilepage = async function(req,res){
                 path: 'user'
             }
         });
-
-        let users = await User.find({});
+        
+        let Friendusers = await User.find({_id: {$in: req.user.friendList}});
+        let Generalusers = await User.find({_id: {$nin: req.user.friendList}});
         
         return res.render('profile',{
+            post: post,
             title : "profile",
-            users : users,
-            post : post,
+            Friendusers : Friendusers,
+            Generalusers : Generalusers,
         });
     }
     catch(err){

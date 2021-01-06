@@ -1,4 +1,18 @@
-$("#allPeople").on("click", ".toggle_friend", toggle_friend);
+$("#Friendusers").on("click", ".toggle_friend", toggle_friend);
+$("#Generalusers").on("click", ".toggle_friend", toggle_friend);
+
+function newfriendtag(id, status, name, addRem){
+    return $(`
+        <div id="usersProfile-${id}">
+        <small>
+        <li>
+        <a id="usersProfile-${id}" href="/users/profile/${id}">${name}</a>
+        <a class="toggle_friend" href="/friends/addRemoveFriend/?status=${status}&id=${id}"> ${addRem} </a>
+        </li>
+        </small><br>
+        </div>
+    `);
+}
 
 function toggle_friend(event){
     event.preventDefault();
@@ -10,11 +24,16 @@ function toggle_friend(event){
         success: function(data){
             if(data.data.addedFriend)
             {
-                $(temp).attr("friendStatus", "notAdded");
-                $(temp).text(`Remove`);
+                // add to friendlist
+                let newPost = newfriendtag(data.data.id,"Remove",data.data.name,"Remove Friend");
+                $(`#usersProfile-${data.data.id}`).remove();
+                $("#FriendusersList").prepend(newPost);
+
             }else{
-                $(temp).attr("friendStatus", "Added");
-                $(temp).text(`Add Friend`);
+                // add to General List
+                let newPost = newfriendtag(data.data.id,"Add",data.data.name,"Add Friend");
+                $(`#usersProfile-${data.data.id}`).remove();
+                $("#GeneralusersList").prepend(newPost);
             }
             
             
