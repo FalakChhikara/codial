@@ -1,5 +1,6 @@
 const Post = require('../models/post')
-const Comment = require('../models/comment')
+const Comment = require('../models/comment');
+const Like = require('../models/like');
 
 module.exports.createPost = async function(req,res){
     // console.log(req);
@@ -79,6 +80,14 @@ module.exports.deletePost = async function(req,res){
         console.log(req.params.id);
         if(post.user == req.user.id){
             post.remove();
+
+            await Like.deleteMany({likeable:post._id, onModel:'Post'});
+            let popComment = await Comment.find({post: post._id});
+            for(c of popComment){
+                console.log("***********",c);
+                await Like.deleteMany({_id: {$in: c.likes}});
+            }
+
             await Comment.deleteMany({post:req.params.id});
             if(req.xhr){
                 return res.status(200).json({
