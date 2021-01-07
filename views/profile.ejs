@@ -31,6 +31,7 @@
                         <li>
                         <a  href="/users/profile/<%= u._id %>"><%=u.name %></a>
                         <a class="toggle_friend" href="/friends/addRemoveFriend/?status=Add&id=<%= u._id %>"> Remove Friend </a>
+                        <a class="chatwithFriend" href="/friends/chat/?id=<%= u._id %>"> Chat </a>
                         </li>
                     </small><br>
                     </div>

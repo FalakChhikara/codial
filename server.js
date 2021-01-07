@@ -19,6 +19,12 @@ const saasMiddleware = require('node-sass-middleware');
 const flash = require('connect-flash');
 const flashMiddleware = require('./config/flashMiddleware');
 
+// setup the chatserver
+const chatServer = require('http').Server(app);
+const chatSocket = require('./config/chatSockets').chatSocket(chatServer);
+chatServer.listen(5000);
+
+
 // app.use(saasMiddleware({
 //     src: './assets/scss',
 //     dest: './assets/css',

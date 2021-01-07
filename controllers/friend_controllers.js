@@ -2,6 +2,8 @@ const Post = require('../models/post')
 const Comment = require('../models/comment')
 const Like = require('../models/like')
 const User = require('../models/user')
+const ChatRoom = require('../models/chatRoom')
+const ChatMessages = require('../models/chatMessages')
 
 module.exports.addRemoveFriend = async function(req,res){
 
@@ -24,6 +26,7 @@ module.exports.addRemoveFriend = async function(req,res){
         // console.log(req.query.id," ",req.user.friendList);
     }
     req.user.save();
+    friendUser.save();
     return res.json(200, {
         message: "Request successful!",
         data: {
@@ -33,4 +36,61 @@ module.exports.addRemoveFriend = async function(req,res){
         }
     });
 
+}
+
+module.exports.chat = async function(req,res){
+    
+    let friendUser = await User.findById(req.query.id);
+    var friendsList = [req.query.id,req.user._id];
+    friendsList.sort();
+    let chatroomName = friendsList.join("-");
+    // console.log("**********ddd ",chatroomName);
+    let Chatroom = await await ChatRoom.findOne({name:chatroomName}).populate({path:"messages"});
+    if(!Chatroom){
+        Chatroom = await ChatRoom.create({
+            name:chatroomName,
+        });
+    }
+    // console.log("*********Friend* ", friendUser);
+    return res.render('_chatroom',{
+        title : "profile",
+        chatUser : friendUser,
+        ChatroomInfo : Chatroom,
+    });
+
+}
+
+module.exports.chatcreate = async function(req,res) {
+    console.log("*******chat creation");
+    try{
+        let message = req.body.message;
+        let chatroomName = req.body.chatroom;
+        let users = chatroomName.split("-");
+        // console.log("*******88 ", req.body);
+        // console.log("*******88 ", message);
+        let to = users[0];
+        if(to==req.user.id){
+            to = users[1];
+        }
+        let Chatroom = await ChatRoom.findOne({name:chatroomName});
+        if(!Chatroom){
+            Chatroom = await ChatRoom.create({
+                name:chatroomName,
+            });
+        }
+        let messageCreate = await ChatMessages.create({
+            from: req.user ,
+            to: to,
+            chatRoom: Chatroom,
+            content: message,
+        });
+        // console.log(messageCreate);
+        Chatroom.messages.push(messageCreate);
+        Chatroom.save();
+        return res.status(200).json();
+
+
+    }catch(err){
+        console.log(err);
+    }
 }
