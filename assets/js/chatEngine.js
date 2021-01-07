@@ -65,32 +65,39 @@ class ChatEngine{
             let selfMsg = false; 
             if(data.userId == self.selfId){
                 selfMsg = true;
-                newMessage = selfmsg(data.message);
-            }else{
-                newMessage = friMsg(data.message);
             }
-            $(`#wholeChatRoom`).append(newMessage);
             console.log("******sending to Ajax");
-            if(data.userId == self.selfId){
-                console.log("******sending to Ajax");
+            let selfAvatar;
+            let friendAvatar;
+            {
+                
                 $.ajax({
                     type: 'post',
                     url: "/friends/chatcreate",
                     data: {
                         "message": `${data.message}`,
                         "chatroom": `${data.chatroom}`,
+                        "selfMsg": `${selfMsg},`
                     }, // convert form data into JSON
                     
                     // after success data is returned from controller
-                    // success: function(data){
-                    //     // console.log("before data")
-                        
-                    // },
-                    // error: function(error){
-                    //     console.log(error.responseText);
-                    // }
+                    success: function(Data){
+                        if(data.userId == self.selfId){
+                            console.log("****** ", selfAvatar);
+                            newMessage = selfmsg(data.message,Data.data.selfAvatar);
+                        }else{
+                            console.log("****** ", friendAvatar);
+                            newMessage = friMsg(data.message,Data.data.friendAvatar);
+                        }
+                        $(`#wholeChatRoom`).append(newMessage);
+                    },
+                    error: function(error){
+                        console.log(error.responseText);
+                    }
                 });
             }
+
+            
             
         });
 
@@ -102,14 +109,14 @@ class ChatEngine{
 }
 
 
-let selfmsg = function(message) {
+let selfmsg = function(message,avatar) {
     return $(`
     <div class="d-flex justify-content-end mb-4">
         <div class="msg_cotainer_send">
             ${message}
         </div>
         <div class="img_cont_msg">
-        <img src="" class="rounded-circle user_img_msg">
+        <img src="${avatar}" class="rounded-circle user_img_msg">
         </div>
     </div>`
     );
@@ -117,11 +124,11 @@ let selfmsg = function(message) {
 
 
 
-let friMsg = function(message) {
+let friMsg = function(message,avatar) {
     return $(`
     <div class="d-flex justify-content-start mb-4">
         <div class="img_cont_msg">
-            <img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img_msg">
+            <img src="${avatar}" class="rounded-circle user_img_msg">
         </div>
         <div class="msg_cotainer">
             ${message}

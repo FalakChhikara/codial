@@ -72,22 +72,36 @@ module.exports.chatcreate = async function(req,res) {
         if(to==req.user.id){
             to = users[1];
         }
-        let Chatroom = await ChatRoom.findOne({name:chatroomName});
-        if(!Chatroom){
-            Chatroom = await ChatRoom.create({
-                name:chatroomName,
+        let friend = await User.findById(to);
+        let friendAvatar = friend.avatar;
+        let selfAvatar = req.user.avatar;
+        console.log("******************* ", selfAvatar);
+        console.log("******************* ", friendAvatar);
+        if(req.body.selfMsg)
+        {
+            let Chatroom = await ChatRoom.findOne({name:chatroomName});
+            if(!Chatroom){
+                Chatroom = await ChatRoom.create({
+                    name:chatroomName,
+                });
+            }
+            let messageCreate = await ChatMessages.create({
+                from: req.user ,
+                to: to,
+                chatRoom: Chatroom,
+                content: message,
             });
+            // console.log(messageCreate);
+            Chatroom.messages.push(messageCreate);
+            Chatroom.save();
         }
-        let messageCreate = await ChatMessages.create({
-            from: req.user ,
-            to: to,
-            chatRoom: Chatroom,
-            content: message,
+        return res.status(200).json({
+            message: "successful!",
+            data: {
+                friendAvatar : friendAvatar,
+                selfAvatar : selfAvatar,
+            }
         });
-        // console.log(messageCreate);
-        Chatroom.messages.push(messageCreate);
-        Chatroom.save();
-        return res.status(200).json();
 
 
     }catch(err){
