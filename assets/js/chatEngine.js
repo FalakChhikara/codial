@@ -67,6 +67,7 @@ class ChatEngine{
                 selfMsg = true;
             }
             console.log("******sending to Ajax");
+            console.log("******", selfMsg);
             let selfAvatar;
             let friendAvatar;
             {
@@ -77,16 +78,16 @@ class ChatEngine{
                     data: {
                         "message": `${data.message}`,
                         "chatroom": `${data.chatroom}`,
-                        "selfMsg": `${selfMsg},`
+                        "selfMsg": `${selfMsg}`,
                     }, // convert form data into JSON
                     
                     // after success data is returned from controller
                     success: function(Data){
                         if(data.userId == self.selfId){
-                            console.log("****** ", selfAvatar);
+                            // console.log("****** ", selfAvatar);
                             newMessage = selfmsg(data.message,Data.data.selfAvatar);
                         }else{
-                            console.log("****** ", friendAvatar);
+                            // console.log("****** ", friendAvatar);
                             newMessage = friMsg(data.message,Data.data.friendAvatar);
                         }
                         $(`#wholeChatRoom`).append(newMessage);
@@ -122,7 +123,7 @@ let selfmsg = function(message,avatar) {
     );
 }
 
-
+{/* <span class="msg_time">8:40 AM, Today</span> */}
 
 let friMsg = function(message,avatar) {
     return $(`
@@ -132,7 +133,7 @@ let friMsg = function(message,avatar) {
         </div>
         <div class="msg_cotainer">
             ${message}
-            <span class="msg_time">8:40 AM, Today</span>
+            
         </div>
     </div>`
     );

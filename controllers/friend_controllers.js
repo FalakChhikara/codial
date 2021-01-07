@@ -77,8 +77,9 @@ module.exports.chatcreate = async function(req,res) {
         let selfAvatar = req.user.avatar;
         console.log("******************* ", selfAvatar);
         console.log("******************* ", friendAvatar);
-        if(req.body.selfMsg)
+        if(req.body.selfMsg=="true")
         {
+            console.log(req.body.selfMsg);
             let Chatroom = await ChatRoom.findOne({name:chatroomName});
             if(!Chatroom){
                 Chatroom = await ChatRoom.create({
