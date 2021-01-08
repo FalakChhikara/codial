@@ -24,6 +24,11 @@ const chatServer = require('http').Server(app);
 const chatSocket = require('./config/chatSockets').chatSocket(chatServer);
 chatServer.listen(5000);
 
+// setup the Notificationserver
+const notificatonServer = require('http').Server(app);
+const notificatonSocket = require('./config/notificatonSockets').notificatonSocket(notificatonServer);
+notificatonServer.listen(8080);
+
 
 // app.use(saasMiddleware({
 //     src: './assets/scss',

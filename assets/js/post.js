@@ -1,6 +1,6 @@
 
 // method to submit the form data for new post using AJAX
-$("#postformCreate").submit(function(event){
+let createNewPost = function(event){
     event.preventDefault();
     let postformCreate = $('#postformCreate');
     $.ajax({
@@ -32,7 +32,7 @@ $("#postformCreate").submit(function(event){
             console.log(error.responseText);
         }
     });
-});
+};
 
 
 
@@ -122,8 +122,8 @@ function postLikes(event){
     });
 }
 
-// $("#postlist").on("click", "a", deletePost);
-$("#postlist").on("click", ".deletePostAnchor", deletePost);
+$("#postlist").on("click", "a", deletePost);
+$("#postformCreate").submit( createNewPost);
 
 
 

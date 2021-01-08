@@ -22,18 +22,21 @@ function toggle_friend(event){
         url: $(this).attr("href"),
 
         success: function(data){
-            if(data.data.addedFriend)
-            {
-                // add to friendlist
-                let newPost = newfriendtag(data.data.id,"Remove",data.data.name,"Remove Friend");
-                $(`#usersProfile-${data.data.id}`).remove();
-                $("#FriendusersList").prepend(newPost);
+            if(data.data.updated)
+            {   
+                if(data.data.addedFriend)
+                {
+                    // add to friendlist
+                    let newPost = newfriendtag(data.data.id,"Add",data.data.name,"Remove Friend");
+                    $(`#usersProfile-${data.data.id}`).remove();
+                    $("#FriendusersList").prepend(newPost);
 
-            }else{
-                // add to General List
-                let newPost = newfriendtag(data.data.id,"Add",data.data.name,"Add Friend");
-                $(`#usersProfile-${data.data.id}`).remove();
-                $("#GeneralusersList").prepend(newPost);
+                }else{
+                    // add to General List
+                    let newPost = newfriendtag(data.data.id,"Remove",data.data.name,"Add Friend");
+                    $(`#usersProfile-${data.data.id}`).remove();
+                    $("#GeneralusersList").prepend(newPost);
+                }
             }
             
             

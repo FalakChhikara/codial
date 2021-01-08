@@ -14,7 +14,7 @@ class ChatEngine{
         let friends = chatBoxId.split("-");
         friends.sort();
         console.log(friends);
-        this.roomName = friends.join("-");
+        this.roomName = "chatRoom-"+friends.join("-");
         this.selfId = selfId;
         this.socket = io.connect('http://localhost:5000', { transports: ['websocket', 'polling', 'flashsocket'] }); // connet to server .on("connection")
         if(selfId){
@@ -66,6 +66,9 @@ class ChatEngine{
             if(data.userId == self.selfId){
                 selfMsg = true;
             }
+            if(data.userId!=self.selfId){
+                $(`#Typing-${data.userId}`).addClass("d-none");
+            }
             console.log("******sending to Ajax");
             console.log("******", selfMsg);
             let selfAvatar;
@@ -100,6 +103,20 @@ class ChatEngine{
 
             
             
+        });
+
+        $(".chatMsgInput").on("keypress",function (event) {
+            self.socket.emit('isTyping', {
+                chatroom : self.roomName,
+                userId : self.selfId,
+            });
+        });
+
+        self.socket.on("sendingTypingMsdToRoom",function(data){
+            console.log('sendingTypingMsdToRoom');
+            if(data.userId!=self.selfId){
+                $(`#Typing-${data.userId}`).removeClass("d-none");
+            }
         });
 
     }

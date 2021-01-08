@@ -9,6 +9,7 @@ module.exports.createComment = async function(req,res){
         let post = await Post.findById(req.body.post);
             if(post)
             {
+                let person = post.user;
                 console.log(post);
                 let comment = await Comment.create({
                     content : req.body.content,
@@ -23,6 +24,10 @@ module.exports.createComment = async function(req,res){
                     return res.status(200).json({
                         data: {
                             comment: popComment,
+                            person: person,
+                            name: req.user.name,
+                            from: req.user.id,
+                            content : post.content,
                         },
                         message: "comment created",
                     });

@@ -18,9 +18,9 @@ let newcomment = function(comment){
 
 
 // method to submit the form data for new post using AJAX
-let createComment = function(event){
+let createComment = function(event,self,temp){
     event.preventDefault();
-    console.log(this);
+    console.log(temp);
     console.log("inside createComment");
     let commentId = $(event.target).attr("id");
     let postId = commentId.split("-")[1];
@@ -47,6 +47,8 @@ let createComment = function(event){
                 timeout: 1500
                 
             }).show();
+
+            self.socket.emit('CommentNotification', data);
             
         },
         error: function(error){
@@ -58,7 +60,7 @@ let createComment = function(event){
 
 
 
-$('.Cform').submit('.CommentForm',createComment)
+
 $("#postlist").on('click','.commentlist .deleteComment', deleteComment)
 
 

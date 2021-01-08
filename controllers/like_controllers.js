@@ -7,7 +7,7 @@ module.exports.likeContent = async function(req,res){
     try{
         let likeableThing;
         let dislike = false;
-
+        let person;
         if(req.query.tag == "Post"){
             likeableThing = await Post.findById(req.query.id);
         }else if(req.query.tag == "Comment"){
@@ -15,6 +15,7 @@ module.exports.likeContent = async function(req,res){
         }else{
             // flash msg
         }
+        person = likeableThing.user;
         let likeThing = await Like.findOne({
             user: req.user._id,
             likeable: req.query.id,
@@ -41,7 +42,13 @@ module.exports.likeContent = async function(req,res){
         return res.json(200, {
             message: "Request successful!",
             data: {
-                dislike: dislike
+                dislike: dislike,
+                person: person,
+                name: req.user.name,
+                likeableThing: likeableThing._id,
+                tag: req.query.tag,
+                from: req.user.id,
+                content : likeableThing.content,
             }
         })
     }catch(err){

@@ -25,6 +25,7 @@
 								</div>
 								<div class="user_info">
 									<span><%= chatUser.name %></span>
+									<small id="Typing-<%= chatUser._id %>" class="d-none"><i><%= chatUser.name %> is typing</i> </small>
 								</div>
 								<!-- <div class="video_cam">
 									<span><i class="fas fa-video"></i></span>
@@ -76,7 +77,7 @@
 									<!-- <span class="input-group-text attach_btn"><i class="fas fa-paperclip"></i></span> -->
 								<!-- </div> -->
 								<form class="chatRoomForm" action="/friend/message/" method="POST">
-								<textarea name="message" class="form-control type_msg" placeholder="Type your message..." value=""></textarea>
+								<textarea class="chatMsgInput" name="message" class="form-control type_msg" placeholder="Type your message..." value=""></textarea>
 								<div class="input-group-append">
 									<button type="submit"><span class="input-group-text send_btn"><i class="fas fa-location-arrow"></i></span></button>
 								</div>

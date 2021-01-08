@@ -36,6 +36,11 @@ module.exports.chatSocket = function(chatServer){
             
         });
 
+
+        socket.on('isTyping',function(data){
+            io.in(data.chatroom).emit("sendingTypingMsdToRoom", data);
+        });
+
         socket.on("disconnect", function(){
             console.log("socket disconnected");
         });

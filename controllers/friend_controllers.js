@@ -11,30 +11,52 @@ module.exports.addRemoveFriend = async function(req,res){
     let friendUser = await User.findById(req.query.id);
     // console.log(req.user);
     // if (req.query.status=="Remove")
-    if(req.user.friendList.includes(req.query.id))
+    let updated = false;
+    // console.log(req.user);
+    let arrayFriends = req.user.friendList;
+    console.log(req.query.status);
+    console.log("***** ", !arrayFriends.includes(req.query.id));
+    if(req.query.status=="Add")
     {
-        console.log("****Removing a friend");
+        console.log('enter in adding area');
         // remove friend
-        req.user.friendList.pull(req.query.id);
-        friendUser.friendList.pull(req.user._id);
+        if(arrayFriends.includes(req.query.id))
+        {
+            console.log("****Removing a friend");
+            updated = true;
+            req.user.friendList.pull(req.query.id);
+            friendUser.friendList.pull(req.user._id);
+        }
+        
     }else{
-        console.log("****Adding a friend");
-        addedFriend = true;
-        // console.log(req.query.id," ",req.user.friendList);
-        req.user.friendList.push(req.query.id);
-        friendUser.friendList.push(req.user._id);
-        // console.log(req.query.id," ",req.user.friendList);
+        console.log('enter in remove area');
+        if(!arrayFriends.includes(req.query.id))
+        {
+            updated = true;
+            console.log("****Adding a friend");
+            addedFriend = true;
+            // console.log(req.query.id," ",req.user.friendList); 
+            req.user.friendList.push(req.query.id);
+            friendUser.friendList.push(req.user._id);
+            // console.log(req.query.id," ",req.user.friendList);
+        }
     }
-    req.user.save();
-    friendUser.save();
+    if(updated)
+    {
+        console.log("update the list");
+        req.user.save();
+        friendUser.save();
+    }
     return res.json(200, {
         message: "Request successful!",
         data: {
             id : friendUser._id,
             name : friendUser.name,
-            addedFriend: addedFriend
+            addedFriend: addedFriend,
+            updated: updated,
         }
     });
+    
 
 }
 
@@ -43,7 +65,7 @@ module.exports.chat = async function(req,res){
     let friendUser = await User.findById(req.query.id);
     var friendsList = [req.query.id,req.user._id];
     friendsList.sort();
-    let chatroomName = friendsList.join("-");
+    let chatroomName = "chatRoom-"+friendsList.join("-");
     // console.log("**********ddd ",chatroomName);
     let Chatroom = await await ChatRoom.findOne({name:chatroomName}).populate({path:"messages"});
     if(!Chatroom){
@@ -68,9 +90,9 @@ module.exports.chatcreate = async function(req,res) {
         let users = chatroomName.split("-");
         // console.log("*******88 ", req.body);
         // console.log("*******88 ", message);
-        let to = users[0];
+        let to = users[1];
         if(to==req.user.id){
-            to = users[1];
+            to = users[2];
         }
         let friend = await User.findById(to);
         let friendAvatar = friend.avatar;

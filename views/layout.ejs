@@ -14,7 +14,9 @@
         <!-- partials -->
         <%- include('./_header'); -%>
         
-        
+        <div id="Notificaions">
+            jjjjjjjjjjjj
+        </div>
         <!-- layouts -->
         <%- body %>
 
@@ -45,6 +47,17 @@
             }).show();
         <% } %>
     </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.5/socket.io.min.js" integrity="sha512-L9L4VhE0D58fCxtJiYDHbIzSVfNGY24rhQPWTZPschTVKLpucPsLeT0FSjfnylLYARalTQqgwXsjjhi+wUTwIw==" crossorigin="anonymous"></script>
+    <!-- io global variable is initialised by above cdn -->
+    <script src="/js/notificationEngine.js"></script>
+    <% if(locals.user){ %>
+    <script>
+        // console.log("***********++++++************");
+        new NotificationEngine("<%= locals.user._id %>");
+    </script>
+    <% } %>
+
     </body>
 
 </html>
