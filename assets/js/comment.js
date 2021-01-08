@@ -59,16 +59,6 @@ let createComment = function(event,self,temp){
 }
 
 
-
-
-$("#postlist").on('click','.commentlist .deleteComment', deleteComment)
-
-
-
-
-
-
-
 function deleteComment(event){
     event.preventDefault();
     console.log("falak in deletecomment");
@@ -97,3 +87,5 @@ function deleteComment(event){
         }
     });
 }
+
+$("#postlist").on('click','.commentlist .deleteComment', deleteComment)

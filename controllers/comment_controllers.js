@@ -10,7 +10,7 @@ module.exports.createComment = async function(req,res){
             if(post)
             {
                 let person = post.user;
-                console.log(post);
+                // console.log(post);
                 let comment = await Comment.create({
                     content : req.body.content,
                     post : req.body.post,
@@ -20,7 +20,7 @@ module.exports.createComment = async function(req,res){
                 post.save(); // as we update
                 if(req.xhr){
                     let popComment = await Comment.findById(comment.id).populate('user');
-                    console.log(popComment);
+                    // console.log(popComment);
                     return res.status(200).json({
                         data: {
                             comment: popComment,

@@ -122,7 +122,7 @@ function postLikes(event){
     });
 }
 
-$("#postlist").on("click", "a", deletePost);
+$("#postlist").on("click", ".deletePostAnchor", deletePost);
 $("#postformCreate").submit( createNewPost);
 
 

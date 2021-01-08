@@ -25,20 +25,20 @@ module.exports.notificatonSocket = function(notificatonServer){
 
         socket.on("joinRoom",function(data){
             // console.log("joining req accepted", data);
-            console.log("***___ ",data.chatroom);
+            // console.log("***___ ",data.chatroom);
             // create a chatroom of this name or join in this chatroom name
             socket.join(data.chatroom);
         });
 
         socket.on("LikeNotification",function(data){
-            console.log(data);
+            // console.log(data);
             console.log("Notificaion-"+data.data.person);
             io.in("Notificaion-"+data.data.person).emit("sendingMsdToPerson", data.data);
             
         });
         
         socket.on("CommentNotification",function(data){
-            console.log(data,"  **********************++++++++++ ");
+            // console.log(data,"  **********************++++++++++ ");
             console.log("Notificaion-"+data.data.person);
             io.in("Notificaion-"+data.data.person).emit("sendingCommentNotiToPerson", data.data);
             

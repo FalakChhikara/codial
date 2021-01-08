@@ -51,7 +51,7 @@ class NotificationEngine{
         self.socket.on("sendingCommentNotiToPerson",function(data){
             if(self.selfId != data.from)
             {
-                console.log("falanjsnjsncjncjs");
+                // console.log("falanjsnjsncjncjs");
                 new Noty({
                     theme: 'relax',
                     text: `<a href="/users/profile/${data.from}">${data.name}</a> commented on your post`,
