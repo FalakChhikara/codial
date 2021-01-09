@@ -3,10 +3,11 @@ const passport = require('passport');
 const User = require('../models/user');
 const Post = require('../models/post');
 const Comment = require('../models/comment');
+const FriendRequest = require("../models/friendNotification");
 const fs = require('fs');
 const path = require('path');
 
-module.exports.profilepage = async function(req,res){
+module.exports.homepage = async function(req,res){
     // console.log(req.cookies.codial);
     // auth check in routers and user is stored in locals
     // console.log("*******", res.locals.user);
@@ -51,15 +52,28 @@ module.exports.profilepage = async function(req,res){
                 path: 'user'
             }
         });
+        let Friendusers;
+        let Generalusers;
+        let Friendrequest;
+        let PendingRequest;
         
-        let Friendusers = await User.find({_id: {$in: req.user.friendList}});
-        let Generalusers = await User.find({_id: {$nin: req.user.friendList}});
+        if(req.user){
+            Friendusers  = await User.find({_id: {$in: req.user.friendList}});            
+            Friendrequest = await User.find({_id: {$in: req.user.friendReqList}});
+            PendingRequest = await User.find({_id: {$in: req.user.pendingList}});
+            var children = Friendusers.concat(Friendrequest);
+            var finalC = PendingRequest.concat(children);
+            Generalusers = await User.find({_id: {$nin:finalC} });
+        }
+        
         
         return res.render('profile',{
             post: post,
             title : "profile",
             Friendusers : Friendusers,
             Generalusers : Generalusers,
+            Friendrequest : Friendrequest,
+            PendingRequest : PendingRequest,
         });
     }
     catch(err){
@@ -95,7 +109,7 @@ module.exports.profilepage = async function(req,res){
 
 
 
-module.exports.Friendprofilepage = function(req,res){
+module.exports.profilepage = function(req,res){
     User.findById(req.params.id, function(err,user){
        return res.render('userinfo',{
            title: "user-info",
@@ -144,12 +158,13 @@ module.exports.profileUpdate = async function(req,res){
 module.exports.create = function(req,res){
     // console.log(req.body);
     if(req.body.password != req.body.password2){
+        req.flash('error','password not matches');
         return res.redirect('back');
     }
     User.findOne({email:req.body.email}, function(error,user){
         if(error){
-            console.log("error in signup");
-            return;
+            req.flash('error','some error occured in singup');
+            return res.redirect('back');
         }
         if(!user){
             User.create(req.body,function(error,user){
@@ -158,11 +173,12 @@ module.exports.create = function(req,res){
                     console.log(error);
                     return;
                 }
-                return res.redirect('/users/signin');
+                return res.redirect('/signin');
             });
         }
         else{
-            return res.redirect('/users/signin');
+            req.flash('error',`user with ${req.body.email} email already exist`);
+            return res.redirect('back');
         }
     });
 }
@@ -198,25 +214,24 @@ module.exports.createSession = function(req,res){
     // res.locals.flash = {
     //     'success' : 'Signup page',
     // }
-    req.falak = "falak";
-    return res.redirect('/users/profile');
+    return res.redirect('/');
 }
 
 module.exports.destroySession = function(req,res){
     req.logout();
     req.flash('success','Logout in successfully');
     
-    return res.redirect('/');
+    return res.redirect('/signin');
 }
 
 module.exports.signUp = function(req,res){
     if(req.isAuthenticated())
     {
-        return res.redirect('/users/profile');
+        return res.redirect('/');
     }
-    res.locals.flash = {
-        'success' : 'Signup page',
-    }
+    // res.locals.flash = {
+    //     'success' : 'Signup page',
+    // }
     return res.render('user_signup',{
         title : "Codial : Signup",
     });
@@ -225,11 +240,11 @@ module.exports.signUp = function(req,res){
 module.exports.signIn = function(req,res){
     if(req.isAuthenticated())
     {
-        return res.redirect('/users/profile');
+        return res.redirect('/');
     }
-    res.locals.flash = {
-        'success' : 'Signin page',
-    }
+    // res.locals.flash = {
+    //     'success' : 'Signin page',
+    // }
     return res.render('user_signin',{
         title : "Codial : signIn",
     });

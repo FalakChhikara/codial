@@ -32,14 +32,17 @@ class NotificationEngine{
         self.socket.on("sendingMsdToPerson",function(data){
             if(self.selfId != data.from)
             {
+                let Text = `${data.tag} ${data.content} is liked by <a href="/users/profile/${data.from}"> ${data.name}</a>`;
                 new Noty({
                 theme: 'relax',
-                text: `${data.tag} ${data.content} is liked by <a href="/users/profile/${data.from}"> ${data.name}</a>`,
+                text: Text,
                 type: 'success',
                 layout: 'bottomLeft',
                 timeout: 1500
                 
                 }).show();
+
+                $(".notificationList").prepend($(`<div class="dropdown-item">${Text}</div>`));
             }
             
         });
@@ -60,10 +63,59 @@ class NotificationEngine{
                     timeout: 1500
                     
                 }).show();
+
+                // adding notification to frontend
+                
+
             }
             
         });
         
+        $("#peopleForm").on("click", ".toggle_friend",function(event){
+            console.log("*****************************");
+            toggle_friend(event,self,this);
+        } );
+
+        self.socket.on("addingRemFriendToPerson",function(data){
+            if(self.selfId != data.data.from){
+                if(data.data.task=="Add")
+                {
+                    // add to friendReqList
+                    console.log(`in ${data.data.task}ing area`);
+                    let newPost = friendReqList(data.data.id1,data.data.name1);
+                    $(`#usersProfile-${data.data.id1}`).remove();
+                    $("#FriendRequestList").prepend(newPost);
+
+                }else if(data.data.task=="Remove"){
+                    // add to General List
+                    console.log(`in ${data.data.task}ing area`);
+                    let newPost = generalList(data.data.id1,data.data.name1);
+                    $(`#usersProfile-${data.data.id1}`).remove();
+                    $("#GeneralusersList").prepend(newPost);
+
+                }else if(data.data.task=="Accept"){
+                    // add to friendList
+                    console.log(`in ${data.data.task}ing area`);
+                    let newPost = friendList(data.data.id1,data.data.name1);
+                    $(`#usersProfile-${data.data.id1}`).remove();
+                    $("#FriendusersList").prepend(newPost);
+
+                }else if(data.data.task=="Reject"){
+                    // add to generalList
+                    console.log(`in ${data.data.task}ing area`);
+                    let newPost = generalList(data.data.id1,data.data.name1);
+                    $(`#usersProfile-${data.data.id1}`).remove();
+                    $("#GeneralusersList").prepend(newPost);
+
+                }else if(data.data.task=="Cancel"){
+                    // add to generalList
+                    console.log(`in ${data.data.task}ing area`);
+                    let newPost = generalList(data.data.id1,data.data.name1);
+                    $(`#usersProfile-${data.data.id1}`).remove();
+                    $("#GeneralusersList").prepend(newPost);
+                }
+            }
+        });
 
     }
 

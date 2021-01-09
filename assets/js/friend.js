@@ -1,43 +1,105 @@
-$("#Friendusers").on("click", ".toggle_friend", toggle_friend);
-$("#Generalusers").on("click", ".toggle_friend", toggle_friend);
-
-function newfriendtag(id, status, name, addRem){
+function pendingList(id, name){
     return $(`
         <div id="usersProfile-${id}">
         <small>
         <li>
-        <a id="usersProfile-${id}" href="/users/profile/${id}">${name}</a>
-        <a class="toggle_friend" href="/friends/addRemoveFriend/?status=${status}&id=${id}"> ${addRem} </a>
+        <a href="/profile/${id}">${name}</a>
+        <a class="toggle_friend" href="/friends/addRemoveFriend/?task=Cancel&id=${id}"> Cancel Request </a>
         </li>
         </small><br>
         </div>
     `);
 }
 
-function toggle_friend(event){
+
+function generalList(id, name){
+    return $(`
+        <div id="usersProfile-${id}">
+        <small>
+        <li>
+        <a href="/profile/${id}">${name}</a>
+        <a class="toggle_friend" href="/friends/addRemoveFriend/?task=Add&id=${id}">Add Friend </a>
+        </li>
+        </small><br>
+        </div>
+    `);
+}
+
+function friendList(id, name){
+    return $(`
+        <div id="usersProfile-${id}">
+        <small>
+        <li>
+        <a href="/profile/${id}">${name}</a>
+        <a class="toggle_friend" href="/friends/addRemoveFriend/?task=Remove&id=${id}"> Remove Friend </a>
+        <a class="chatwithFriend" href="/friends/chat/?id=${id}"> Chat </a>
+        </li>
+        </small><br>
+        </div>
+    `);
+}
+
+function friendReqList(id, name){
+    return $(`
+        <div id="usersProfile-${id}">
+        <small>
+        <li>
+        <a href="/profile/${id}">${name}</a>
+        <a class="toggle_friend" href="/friends/addRemoveFriend/?task=Accept&id=${id}"> Accept </a>
+        <a class="toggle_friend" href="/friends/addRemoveFriend/?task=Reject&id=${id}"> Reject </a>
+        </li>
+        </small><br>
+        </div>
+    `);
+}
+
+function toggle_friend(event,self,temp){
     event.preventDefault();
-    let temp = this;
+    // let temp = this;
     $.ajax({
         type: 'post',
-        url: $(this).attr("href"),
+        url: $(temp).attr("href"),
 
         success: function(data){
-            if(data.data.updated)
-            {   
-                if(data.data.addedFriend)
-                {
-                    // add to friendlist
-                    let newPost = newfriendtag(data.data.id,"Add",data.data.name,"Remove Friend");
-                    $(`#usersProfile-${data.data.id}`).remove();
-                    $("#FriendusersList").prepend(newPost);
+           console.log(data);
+            if(data.data.task=="Add")
+            {
+                // add to pendingList
+                console.log(`in ${data.data.task}ing area`);
+                let newPost = pendingList(data.data.id,data.data.name);
+                $(`#usersProfile-${data.data.id}`).remove();
+                $("#PendingRequestList").prepend(newPost);
 
-                }else{
-                    // add to General List
-                    let newPost = newfriendtag(data.data.id,"Remove",data.data.name,"Add Friend");
-                    $(`#usersProfile-${data.data.id}`).remove();
-                    $("#GeneralusersList").prepend(newPost);
-                }
+            }else if(data.data.task=="Remove"){
+                // add to General List
+                console.log(`in ${data.data.task}ing area`);
+                let newPost = generalList(data.data.id,data.data.name);
+                $(`#usersProfile-${data.data.id}`).remove();
+                $("#GeneralusersList").prepend(newPost);
+
+            }else if(data.data.task=="Accept"){
+                // add to friendList
+                console.log(`in ${data.data.task}ing area`);
+                let newPost = friendList(data.data.id,data.data.name);
+                $(`#usersProfile-${data.data.id}`).remove();
+                $("#FriendusersList").prepend(newPost);
+
+            }else if(data.data.task=="Reject"){
+                // add to generalList
+                console.log(`in ${data.data.task}ing area`);
+                let newPost = generalList(data.data.id,data.data.name);
+                $(`#usersProfile-${data.data.id}`).remove();
+                $("#GeneralusersList").prepend(newPost);
+
+            }else if(data.data.task=="Cancel"){
+                // add to generalList
+                console.log(`in ${data.data.task}ing area`);
+                let newPost = generalList(data.data.id,data.data.name);
+                $(`#usersProfile-${data.data.id}`).remove();
+                $("#GeneralusersList").prepend(newPost);
             }
+            self.socket.emit('addRemoveFriend', data);
+            
             
             
         },

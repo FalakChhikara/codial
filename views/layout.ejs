@@ -12,17 +12,18 @@
     <body>
 
         <!-- partials -->
-        <%- include('./_header'); -%>
-        
-        <div id="Notificaions">
-            jjjjjjjjjjjj
-        </div>
+        <% if(locals.user){ %>
+            <%- include('./_navbar'); -%>
+        <% } %>
         <!-- layouts -->
+
+        
+
         <%- body %>
 
 
         <!-- partials -->
-        <%- include('./_footer'); -%>
+        
     
     <%- script %>
     <script>

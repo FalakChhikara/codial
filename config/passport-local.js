@@ -1,6 +1,7 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const User = require('../models/user');
+const Notificaion = require('../models/notification');
 
 // Auth using passport
 // find user and auth them
@@ -46,16 +47,17 @@ passport.checkAuthentication = function(req,res,next){
       return next(); // pass to controllers
   }
   else{
-    return res.redirect('/users/signup');
+    return res.redirect('/signup');
   }
 }
 
 // set users for views
-passport.setAuthUser = function(req,res,next){
+passport.setAuthUser = async function(req,res,next){
   if(req.isAuthenticated()){
     // locals for the views
     // req.user contains the current signed in user from the session cookie and we are just sending this to the locals for the views
-    res.locals.user = req.user;
+    // res.locals.user = req.user;
+    res.locals.user = await User.findById(req.user._id).populate("notifications");
   }
   next();
 }

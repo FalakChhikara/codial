@@ -77,7 +77,6 @@ module.exports.deletePost = async function(req,res){
     try{
         
         let post = await Post.findById(req.params.id);
-        console.log(req.params.id);
         if(post.user == req.user.id){
             post.remove();
 
@@ -115,31 +114,22 @@ module.exports.deletePost = async function(req,res){
     
 }
 
-module.exports.likePost = async function(){
+module.exports.viewPost = async function(){
     try{
-        let post = await Post.findById(req.body.post);
-        if(post)
-        {
-            let like = await Like.create({
-                post : req.body.post,
-                user : req.user._id    ////////////////////////// doubt
-            });
-            post.comment.push(comment._id);
-            post.save(); // as we update
-            if(req.xhr){
-                let popComment = await Comment.findById(comment.id).populate('user');
-                console.log(popComment);
-                return res.status(200).json({
-                    data: {
-                        comment: popComment,
-                    },
-                    message: "comment created",
-                });
+        let post = await Post.findById(req.params.id)
+        .populate('user')
+        .populate({
+            path: 'comment',
+            populate:{
+                path: 'user'
             }
-            return res.redirect('back');
-        }
+        });;
+        return res.render('post_info',{
+            post: post,
+        });
+       
     }catch(err){
-        req.flash("error", "error in comment creation");
+        req.flash("error", "error in post deletion");
         return res.redirect('back');
     }
 }

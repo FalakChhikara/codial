@@ -44,6 +44,10 @@ module.exports.notificatonSocket = function(notificatonServer){
             
         });
 
+        socket.on("addRemoveFriend",function(data){
+            io.in("Notificaion-"+data.data.id).emit("addingRemFriendToPerson", data);
+        });
+
         socket.on("disconnect", function(){
             console.log("socket disconnected");
         });

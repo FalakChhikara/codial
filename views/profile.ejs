@@ -9,55 +9,36 @@
         partials
         <%- include('./_header'); -%> -->
         
-        Profile<br>
-        <%= locals.user.name %><br>
-        <%= locals.user.email %>
-        <%- include('./_post'); -%>
-        <img src=<%= user.avatar %> width="100px">
-        
-        <!-- <video width="320" height="240" controls>
-            <source src=<%= user.avatar %> type="video/mp4">
-            <source src=<%= user.avatar %> type="video/ogg">
-            Your browser does not support the video tag.
-          </video> -->
+        <div class="container">
+            <div class="leftpane">
+                <% if (locals.user){ %>
+                    Profile<br>
+                    <%= locals.user.name %><br>
+                    <%= locals.user.email %>
+                    <img src=<%= user.avatar %> width="100px">
+                <% }else{ %>
+                    Create New Account <a href="/signup">Signup </a><br>
+                    Already a user <a href="/signin">SignIn </a>
 
-          <h2>Friend</h2>
-        <div id="Friendusers">
-            <ul id="FriendusersList">    
-            <% for(u of Friendusers){ %>
-                <% if (locals.user.id != u.id){ %>
-                    <div id="usersProfile-<%= u._id %>">
-                    <small>
-                        <li>
-                        <a  href="/users/profile/<%= u._id %>"><%=u.name %></a>
-                        <a class="toggle_friend" href="/friends/addRemoveFriend/?status=Add&id=<%= u._id %>"> Remove Friend </a>
-                        <a class="chatwithFriend" href="/friends/chat/?id=<%= u._id %>"> Chat </a>
-                        </li>
-                    </small><br>
-                    </div>
                 <% } %>
-            <% } %>
-            </ul>
-        </div>
-
-        <h2>People You May Know</h2>
-        <div id="Generalusers">
-         <ul id="GeneralusersList">   
-            <% for(u of Generalusers){ %>
-                <% if (locals.user.id != u.id){ %>
-                    <div id="usersProfile-<%= u._id %>">
-                    <small>
-                        <li>
-                        <a href="/users/profile/<%= u._id %>"><%=u.name %></a>
-                        <a class="toggle_friend" href="/friends/addRemoveFriend/?status=Remove&id=<%= u._id %>"> Add Friend </a>
-                        </li>
-                    </small><br>
-                    </div>
+                
+            </div>
+            <div class="middlepane">Test Page
+                <%- include('./_post'); -%>
+            </div>
+            <div class="rightpane">
+                <% if (locals.user){ %>
+                    <%- include('./_friendlist') -%>
+                    <%- include('./_peopleKnow') -%>
+                    <%- include('./_friendRequest') -%>
+                    
                 <% } %>
-            <% } %>
-         </ul>
-        </div>
+            </div>
 
+       
+
+
+         
         <script src='/js/post.js'></script>
         <script src='/js/comment.js'></script>
         <script src='/js/like.js'></script>
@@ -70,8 +51,3 @@
 
 </html> -->
 
-<!-- <% if (u._id in locals.user.friendList){ %> -->
-    <!-- <a class="toggle_friend" href="/friends/addRemoveFriend/?status=Add&id=<%= u._id %>" friendStatus = "notAdded"> Add Friend </a> -->
-    <!-- <% } else { %> -->
-        <!-- <a class="toggle_friend" href="/friends/addRemoveFriend/?status=Remove&id=<%= u._id %>" friendStatus = "Added"> Remove Friend </a> -->
-    <!-- <% } %> -->

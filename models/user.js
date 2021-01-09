@@ -25,8 +25,25 @@ const userSchema = new mongoose.Schema({
         type : mongoose.Schema.Types.ObjectId,
         ref : 'User'
       }
+    ],
+    notifications: [
+      {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'Notification'
+      }
+    ],
+    friendReqList: [
+      {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'User'
+      }
+    ],
+    pendingList: [
+      {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'User'
+      }
     ]
-
   },{
       timestamps:true,
   });

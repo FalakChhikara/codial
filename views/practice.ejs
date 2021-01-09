@@ -1,0 +1,17 @@
+<h2>People You May Know</h2>
+<div id="Generalusers">
+<ul id="GeneralusersList">   
+	<% for(u of Generalusers){ %>
+		<% if (locals.user.id != u.id){ %>
+			<div id="usersProfile-<%= u._id %>">
+			<small>
+				<li>
+				<a href="/users/profile/<%= u._id %>"><%=u.name %></a>
+				<a class="toggle_friend" href="/friends/addRemoveFriend/?task=Add&id=<%= u._id %>"> Add Friend </a>
+				</li>
+			</small><br>
+			</div>
+		<% } %>
+	<% } %>
+</ul>
+</div>

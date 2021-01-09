@@ -4,56 +4,70 @@ const Like = require('../models/like')
 const User = require('../models/user')
 const ChatRoom = require('../models/chatRoom')
 const ChatMessages = require('../models/chatMessages')
+const FriendRequest = require("../models/friendNotification");
 
 module.exports.addRemoveFriend = async function(req,res){
 
-    let addedFriend = false;
     let friendUser = await User.findById(req.query.id);
-    // console.log(req.user);
-    // if (req.query.status=="Remove")
-    let updated = false;
-    // console.log(req.user);
     let arrayFriends = req.user.friendList;
-    console.log(req.query.status);
-    console.log("***** ", !arrayFriends.includes(req.query.id));
-    if(req.query.status=="Add")
+    console.log(req.query.task);
+    if(req.query.task=="Remove")
     {
-        console.log('enter in adding area');
-        // remove friend
-        if(arrayFriends.includes(req.query.id))
-        {
-            console.log("****Removing a friend");
-            updated = true;
-            req.user.friendList.pull(req.query.id);
-            friendUser.friendList.pull(req.user._id);
-        }
+        console.log(`in ${req.query.task}ing area`);
+        req.user.friendList.pull(req.query.id);
+        friendUser.friendList.pull(req.user._id);
+    }
+    else if(req.query.task=="Add"){
         
-    }else{
-        console.log('enter in remove area');
-        if(!arrayFriends.includes(req.query.id))
-        {
-            updated = true;
-            console.log("****Adding a friend");
-            addedFriend = true;
-            // console.log(req.query.id," ",req.user.friendList); 
-            req.user.friendList.push(req.query.id);
-            friendUser.friendList.push(req.user._id);
-            // console.log(req.query.id," ",req.user.friendList);
-        }
+        console.log(`in ${req.query.task}ing area`);
+        await FriendRequest.create({
+            from: req.user._id,
+            to: req.query.id,
+        });
+        req.user.pendingList.push(req.query.id);
+        friendUser.friendReqList.push(req.user._id);
     }
-    if(updated)
-    {
-        console.log("update the list");
-        req.user.save();
-        friendUser.save();
+    else if(req.query.task == "Accept"){
+        console.log(`in ${req.query.task}ing area`);
+        await FriendRequest.deleteOne({
+            from: req.query.id,
+            to: req.user._id,
+        });
+        req.user.friendList.push(req.query.id);
+        friendUser.friendList.push(req.user._id);
+        req.user.friendReqList.pull(req.query.id);
+        friendUser.pendingList.pull(req.user._id);
     }
+    else if(req.query.task == "Reject"){
+        console.log(`in ${req.query.task}ing area`);
+        await FriendRequest.deleteOne({
+            from: req.query.id,
+            to: req.user._id,
+        });
+        req.user.friendReqList.pull(req.query.id);
+        friendUser.pendingList.pull(req.user._id);
+    }
+    else if(req.query.task == "Cancel"){
+        console.log(`in ${req.query.task}ing area`);
+        await FriendRequest.deleteOne({
+            from: req.user._id,
+            to: req.query.id,
+        });
+        req.user.pendingList.pull(req.query.id);
+        friendUser.friendReqList.pull(req.user._id);
+    }
+    req.user.save();
+    friendUser.save();
+
     return res.json(200, {
         message: "Request successful!",
         data: {
             id : friendUser._id,
+            id1 : req.user._id,
             name : friendUser.name,
-            addedFriend: addedFriend,
-            updated: updated,
+            name1: req.user.name,
+            // addedFriend: addedFriend,
+            task : req.query.task,
         }
     });
     
