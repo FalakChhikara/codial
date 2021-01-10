@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const path = require('path');
 const Avatar_Path = path.join('/uploads/users/avatars');
+const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
     email: {
@@ -48,6 +49,15 @@ const userSchema = new mongoose.Schema({
       timestamps:true,
   });
 
+
+  userSchema.methods.generateHash = function(password) {
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(8));
+  };
+  
+  // checking if password is valid
+  userSchema.methods.validPassword = function(password) {
+    return bcrypt.compareSync(password, this.password);
+  };
 
   let storage = multer.diskStorage({
     destination: function (req, file, cb) {

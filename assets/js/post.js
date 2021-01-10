@@ -50,6 +50,7 @@ let newpost = function(post, user){
                 <a class="Likes" href="/likes/?tag=Post&id=${post._id} " data-likes="${post.likes.length}">${post.likes.length} Like</a>
             </small></p> 
             </li>
+            <a href="/posts/${post._id} "> View</a>
             <div class="Cform">
             <form class="CommentForm" id="commentForm-${post._id}" action="/comment/create/" method="POST">
             <textarea name="content" cols="20" rows="2" placeholder="type here..." required></textarea>

@@ -7,7 +7,7 @@
                     <div id="usersProfile-<%= u._id %>">
                     <small>
                         <li>
-                        <a  href="/users/profile/<%= u._id %>"><%=u.name %></a>
+                        <a  href="/profile/<%= u._id %>"><%=u.name %></a>
                         <a class="toggle_friend" href="/friends/addRemoveFriend/?task=Remove&id=<%= u._id %>"> Remove Friend </a>
                         <a class="chatwithFriend" href="/friends/chat/?id=<%= u._id %>"> Chat </a>
                         </li>
@@ -26,7 +26,7 @@
                     <div id="usersProfile-<%= u._id %>">
                     <small>
                         <li>
-                        <a href="/users/profile/<%= u._id %>"><%=u.name %></a>
+                        <a href="/profile/<%= u._id %>"><%=u.name %></a>
                         <a class="toggle_friend" href="/friends/addRemoveFriend/?task=Add&id=<%= u._id %>"> Add Friend </a>
                         </li>
                     </small><br>
@@ -44,7 +44,7 @@
                     <div id="usersProfile-<%= u._id %>">
                     <small>
                         <li>
-                        <a  href="/users/profile/<%= u._id %>"><%=u.name %></a>
+                        <a  href="/profile/<%= u._id %>"><%=u.name %></a>
                         <a class="toggle_friend" href="/friends/addRemoveFriend/?task=Accept&id=<%= u._id %>"> Accept </a>
                         <a class="toggle_friend" href="/friends/addRemoveFriend/?task=Reject&id=<%= u._id %>"> Reject </a>
                         </li>

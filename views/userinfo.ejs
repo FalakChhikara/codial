@@ -1,7 +1,7 @@
-Userinfo<br>
+<h2>Userinfo</h2><br>
 <%= locals.profile.name %><br>
 <%= locals.profile.email %>
-
+<img src=<%= locals.profile.avatar %> width="100px">
 <% if(locals.user.id == profile.id){ %>
     <form action="/update/<%= profile.id %>" method="POST" enctype="multipart/form-data">
         <input type="text" name="name" value="<%= profile.name %>" placeholder="your name" required>

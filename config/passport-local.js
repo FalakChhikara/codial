@@ -13,7 +13,9 @@ passport.use(new LocalStrategy({
       User.findOne({ email: email }, function (err, user) {
         if (err) { req.flash("error",err);return done(err); }
         if (!user) { req.flash("error","email is wrong");return done(null, false); }
-        if (user.password != password) { req.flash("error","password is wrong"); return done(null, false); }
+        if (!user.validPassword(password)) {
+          console.log(user.password," ", password, " ", user.generateHash(password));
+          req.flash("error","password is wrong"); return done(null, false); }
         return done(null, user);
       });
     }

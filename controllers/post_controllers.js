@@ -114,7 +114,7 @@ module.exports.deletePost = async function(req,res){
     
 }
 
-module.exports.viewPost = async function(){
+module.exports.viewPost = async function(req,res){
     try{
         let post = await Post.findById(req.params.id)
         .populate('user')
@@ -126,6 +126,7 @@ module.exports.viewPost = async function(){
         });;
         return res.render('post_info',{
             post: post,
+            title: "post",
         });
        
     }catch(err){

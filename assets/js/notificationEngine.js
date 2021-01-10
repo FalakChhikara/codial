@@ -32,7 +32,7 @@ class NotificationEngine{
         self.socket.on("sendingMsdToPerson",function(data){
             if(self.selfId != data.from)
             {
-                let Text = `${data.tag} ${data.content} is liked by <a href="/users/profile/${data.from}"> ${data.name}</a>`;
+                let Text = `${data.tag} ${data.content} is liked by <a href="/profile/${data.from}"> ${data.name}</a>`;
                 new Noty({
                 theme: 'relax',
                 text: Text,
@@ -57,7 +57,7 @@ class NotificationEngine{
                 // console.log("falanjsnjsncjncjs");
                 new Noty({
                     theme: 'relax',
-                    text: `<a href="/users/profile/${data.from}">${data.name}</a> commented on your post`,
+                    text: `<a href="/profile/${data.from}">${data.name}</a> commented on your post`,
                     type: 'success',
                     layout: 'bottomLeft',
                     timeout: 1500
@@ -77,10 +77,22 @@ class NotificationEngine{
         } );
 
         self.socket.on("addingRemFriendToPerson",function(data){
-            if(self.selfId != data.data.from){
+            if(self.selfId != data.data.id1){
                 if(data.data.task=="Add")
                 {
                     // add to friendReqList
+                    new Noty({
+                        theme: 'relax',
+                        text: `<a href="/profile/${data.data.id1}">${data.data.name1}</a> send you friend request
+                        
+                        `,
+                        // <a class="toggle_friend" href="/friends/addRemoveFriend/?task=Accept&id=${data.data.id1}">Accept</a>
+                        // <a class="toggle_friend" href="/friends/addRemoveFriend/?task=Reject&id=${data.data.id1}">Reject</a>
+                        type: 'success',
+                        layout: 'bottomLeft',
+                        timeout: 1500
+                        
+                    }).show();
                     console.log(`in ${data.data.task}ing area`);
                     let newPost = friendReqList(data.data.id1,data.data.name1);
                     $(`#usersProfile-${data.data.id1}`).remove();
@@ -99,6 +111,14 @@ class NotificationEngine{
                     let newPost = friendList(data.data.id1,data.data.name1);
                     $(`#usersProfile-${data.data.id1}`).remove();
                     $("#FriendusersList").prepend(newPost);
+                    new Noty({
+                        theme: 'relax',
+                        text: `<a href="/profile/${data.data.id1}">${data.data.name1}</a> accepted your friend request`,
+                        type: 'success',
+                        layout: 'bottomLeft',
+                        timeout: 1500
+                        
+                    }).show();
 
                 }else if(data.data.task=="Reject"){
                     // add to generalList

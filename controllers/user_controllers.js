@@ -6,6 +6,7 @@ const Comment = require('../models/comment');
 const FriendRequest = require("../models/friendNotification");
 const fs = require('fs');
 const path = require('path');
+const bcrypt = require('bcrypt');
 
 module.exports.homepage = async function(req,res){
     // console.log(req.cookies.codial);
@@ -167,12 +168,15 @@ module.exports.create = function(req,res){
             return res.redirect('back');
         }
         if(!user){
+            
             User.create(req.body,function(error,user){
                 if(error){
                     console.log("error in creating user ");
                     console.log(error);
                     return;
                 }
+                user.password = user.generateHash(req.body.password);
+                user.save();
                 return res.redirect('/signin');
             });
         }
