@@ -9,7 +9,7 @@ router.use('/posts', require('./post'));
 router.use('/comment', require('./comment'));
 router.use('/likes', require('./like'));
 router.use('/friends', require('./friend'));
-
+router.use('/api',require('./api'));
 
 
 

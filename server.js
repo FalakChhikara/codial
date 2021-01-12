@@ -11,6 +11,7 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const passport = require('passport');
 const passportLocal = require('./config/passport-local');
+const passportJWT = require('./config/passportJWT');
 
 const MongoStore = require('connect-mongo')(session);
 
