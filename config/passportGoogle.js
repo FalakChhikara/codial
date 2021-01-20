@@ -1,3 +1,4 @@
+const password = require("../password");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 const crypto = require("crypto");
@@ -6,9 +7,8 @@ const User = require("../models/user");
 passport.use(
   new GoogleStrategy(
     {
-      clientID:
-        "306308293562-4o9ab36a27u5eevnck50v0s78brs7lrc.apps.googleusercontent.com",
-      clientSecret: "5Pl9ScfR-Cv5OuQe-rzR_3Nb",
+      clientID: password.GOOGLE_CLIENT_ID,
+      clientSecret: password.GOOGLE_CLIENT_SECRET,
       callbackURL: "http://localhost:8000/users/auth/google/callback",
     },
     // accessToken -> given by google

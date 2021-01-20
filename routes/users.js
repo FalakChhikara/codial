@@ -43,7 +43,7 @@ router.get(
   passport.authenticate("google", {
     successRedirect: "/",
     failureRedirect: "/signin",
-  })
+  }) //////////////////////////////////////////////////////////////////////// user_controllers.createSession is not working
 );
 
 module.exports = router;
