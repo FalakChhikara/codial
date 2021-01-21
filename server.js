@@ -13,6 +13,7 @@ const passport = require("passport");
 const passportLocal = require("./config/passport-local");
 const passportJWT = require("./config/passportJWT");
 const passportGoogle = require("./config/passportGoogle");
+const passportOutlook = require("./config/passportOutlook");
 
 const MongoStore = require("connect-mongo")(session);
 
