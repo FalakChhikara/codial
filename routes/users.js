@@ -51,15 +51,15 @@ router.get(
   passport.authenticate("windowslive", {
     scope: [
       "openid",
-      // "profile",
-      // "offline_access",
-      // "https://outlook.office.com/Mail.Read",
+      "profile",
+      "offline_access",
+      "https://outlook.office.com/Mail.Read",
     ],
   })
 );
 
 router.get(
-  "/users/auth/outlook/callback",
+  "/auth/outlook/callback",
   passport.authenticate("windowslive", { failureRedirect: "/login" }),
   function (req, res) {
     // Successful authentication, redirect home.

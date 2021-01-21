@@ -10,12 +10,15 @@ passport.use(
       clientID: OUTLOOK_CLIENT_ID,
       clientSecret: OUTLOOK_CLIENT_SECRET,
       authority: "https://login.microsoftonline.com/common",
-      callbackURL: "http://www.example.com/auth/outlook/callback",
+      callbackURL: "http://localhost:8000/auth/outlook/callback",
     },
     function (accessToken, refreshToken, profile, done) {
       console.log(accessToken, refreshToken);
       console.log(profile);
-      User.findOne({ email: profile.id }).exec(function (err, user) {
+      User.findOne({ email: profile.emails[0].value }).exec(function (
+        err,
+        user
+      ) {
         if (err) {
           console.log("error in google auth", err);
           return;
@@ -27,8 +30,8 @@ passport.use(
         } else {
           User.create(
             {
-              name: "FALAK",
-              email: profile.id,
+              name: profile.displayName,
+              email: profile.emails[0].value,
               password: crypto.randomBytes(20).toString("hex"),
             },
             function (err, user) {
