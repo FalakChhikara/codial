@@ -14,7 +14,7 @@ passport.use(
       passReqToCallback: true, // allows first arg as req
     },
     function (req, email, password, done) {
-      console.log("in passport-locals");
+      // console.log("in passport-locals");
       User.findOne({ email: email }, function (err, user) {
         if (err) {
           req.flash("error", err);
@@ -37,14 +37,14 @@ passport.use(
 // serializing the user to decide which key is to be kept in the cookies
 // browser part
 passport.serializeUser(function (user, done) {
-  console.log("serializeUser");
+  // consolze.log("serializeUser");
   done(null, user.id);
 });
 
 // deserializing the user from the key in the cookies
 // server part
 passport.deserializeUser(function (id, done) {
-  console.log("deserializeUser");
+  // console.log("deserializeUser");
   User.findById(id, function (err, user) {
     if (err) {
       console.log("Error in finding user --> Passport");
@@ -57,10 +57,10 @@ passport.deserializeUser(function (id, done) {
 
 // MW set users for views
 passport.setAuthUser = async function (req, res, next) {
-  console.log("setAuthUser");
+  // console.log("setAuthUser");
   if (req.isAuthenticated()) {
     // Passport fun
-    console.log("In--setAuthUser");
+    // console.log("In--setAuthUser");
     // locals for the views
     // req.user contains the current signed in user from the session cookie and we are just sending this to the locals for the views
     // res.locals.user = req.user;

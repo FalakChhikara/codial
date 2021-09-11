@@ -13,8 +13,8 @@ passport.use(
       callbackURL: "http://localhost:8000/auth/outlook/callback",
     },
     function (accessToken, refreshToken, profile, done) {
-      console.log(accessToken, refreshToken);
-      console.log(profile);
+      // console.log(accessToken, refreshToken);
+      // console.log(profile);
       User.findOne({ email: profile.emails[0].value }).exec(function (
         err,
         user

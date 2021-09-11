@@ -2,18 +2,20 @@
 
 class NotificationEngine{
     constructor(selfId){
+        console.log(selfId);
         this.selfId = selfId;
         this.roomName = "Notificaion-"+selfId;
-        this.socket = io.connect('http://localhost:8080', { transports: ['websocket', 'polling', 'flashsocket'] }); // connet to server .on("connection")
+        this.socket = io.connect('http://localhost:5005', { transports: ['websocket', 'polling', 'flashsocket'] }); // connet to server .on("connection")
         
         if(selfId){
-            console.log(this.roomname);
+            console.log("*******" + this.roomName);
             this.connectionHandler();
         }
         
     }
 
     connectionHandler(){
+        console.log("******* falak" );
         let self = this;
         self.socket.on('connect', function(){
             console.log("socket notification is connected");

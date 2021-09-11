@@ -32,7 +32,7 @@ const notificatonServer = require("http").Server(app);
 const notificatonSocket = require("./config/notificatonSockets").notificatonSocket(
   notificatonServer
 );
-notificatonServer.listen(8080);
+notificatonServer.listen(5005);
 
 // app.use(saasMiddleware({
 //     src: './assets/scss',
@@ -42,11 +42,11 @@ notificatonServer.listen(8080);
 //     prefix:  '/css'
 // }));
 
-app.use(express.urlencoded());
+app.use(express.urlencoded()); // parse form data, req.body, body-parser
 app.use(cookieParser());
 app.use(expressLayouts);
 
-app.use(express.static("./assets"));
+app.use(express.static("./assets")); // use files(only read access) in assests folder
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
 // for style and link tags
@@ -55,7 +55,7 @@ app.set("layout extractScripts", true);
 
 app.set("view engine", "ejs");
 // app.set('views', path.join(__dirname,'views'));
-app.set("views", "./views");
+app.set("views", "./views"); // for .render method
 
 // MW - encrypts session cookie and mongostore is used to store session cookie in db
 app.use(
@@ -112,6 +112,8 @@ app.use(flashMiddleware.setFlash);
 // });
 
 app.use("/", require("./routes/index"));
+
+// .use is middleware
 
 app.listen(port, function (error) {
   if (error) {

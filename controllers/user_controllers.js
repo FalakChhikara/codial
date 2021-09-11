@@ -199,6 +199,7 @@ module.exports.create = function (req, res) {
 module.exports.createSession = function (req, res) {
   // console.log(req.cookies);
   console.log("falak");
+  req.session.isLoggedIn = true;
   if (req) {
     req.flash("success", "Logged in successfully"); ///////////////////////////////////doubt
   }
